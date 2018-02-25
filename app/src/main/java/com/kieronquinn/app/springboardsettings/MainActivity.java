@@ -1,5 +1,6 @@
 package com.kieronquinn.app.springboardsettings;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
@@ -16,6 +18,7 @@ import com.kieronquinn.app.springboardsettings.settings.Adapter;
 import com.kieronquinn.app.springboardsettings.settings.BaseSetting;
 import com.kieronquinn.app.springboardsettings.settings.HeaderSetting;
 import com.kieronquinn.app.springboardsettings.settings.SpringboardSetting;
+import com.kieronquinn.app.springboardsettings.settings.TextSetting;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -105,6 +108,18 @@ public class MainActivity extends AppCompatActivity {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+        //Empty settings list can be confusing to the user, and is quite common, so we'll add the FAQ to save them having to read the OP (oh the horror)
+        if(settingList.size() == 0){
+            //Add error message
+            settingList.add(new TextSetting(getString(R.string.error_loading), new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Restart
+                    startActivity(new Intent(MainActivity.this, MainActivity.class));
+                    finish();
+                }
+            }));
         }
         //Add main header to top (pos 0)
         settingList.add(0, new HeaderSetting(getString(R.string.springboard)));
